@@ -8,8 +8,8 @@ import random
 #print the board
 #go back to get input
 
-GRID_SIZE_X = 10  #constants: do in caps
-GRID_SIZE_Y = 10
+GRID_SIZE_X = 3  #constants: do in caps
+GRID_SIZE_Y = 3
 NUM_SHIPS = 2  # Ships are all 1x1
 
 # GENERATING BOARD WITH SHIPS
@@ -24,17 +24,9 @@ def gen_ship(board):  #brackets = parameters, not necesarily same 'board'as belo
 def gen_board():  #colon needed when line of code creates new indent
     board = []  # [] means an empty list
     for x in range(0, GRID_SIZE_X):
-
-        #Don't need to initialise x here, x starts as 0, dont have to specify
-        #type in python, knows range returns list of integers.
-
-        board.append([])
-
-        #append means add on to end, so for every x value you add a new empty
-        #list, hence making it 2 dimensional.
-
+        board.append([]) #append means add on to end, so for every x value you add a new empty
+                        #list, hence making it 2 dimensional.
         for y in range(0, GRID_SIZE_Y):
-
             #Put y for loop in x one (NESTED FOR LOOP) so you get a y value
             #for every x value not just a y axis of values - means loop does x=0
             #then y=0 up to 10 then does for x=1, y=0 to 10.
@@ -100,7 +92,7 @@ def enterCoordinates():
         attempt = input("Enter hit coordinates: ")
         return attempt
 
-def assessCoordinate(board):
+def assessCoordinate(board,count):
     coords = enterCoordinates().split(",") #splits the inputted string (coordinate) into a list defined by the comma
     if len(coords) == 2: #len=length ie. how many values in list
         print("Correct length coordinate")
@@ -114,42 +106,41 @@ def assessCoordinate(board):
                     board[x][y] = str('!')
                     print_board(board)
                     print("Hit!")
-                    numberHit += 1
-                    return numberHit
+                    return True
 
                 elif board[x][y] == 0:
                     board[x][y] = str('x')
                     print_board(board)
                     print("Miss!")
-                    #return numberHit
 
                 else:
                     print("Coordinate already tried")
-                #if assessHit(board,x,y) == True: #this calls it as well as being a conditional so will still print hit/miss etc
-                    #return True
-
         else:
-            print("Coordinates must be between 1 and ", GRID_SIZE_X, " - try again")
+            print("Coordinates must be between 1 and ", GRID_SIZE_X, "- try again")
     else:
-        print("Coordinate must be two numbers separated by comma - try again")
+        print("Coordinate must be two numbers separated by a comma - try again")
 
+def assessWin(board,count):
+    if assessCoordinate(board,count) == True:
+        count += 1
+            if NUM_SHIPS - count == 1:
+                print("1 boat left to hit!")
+            else:
+                print(NUM_SHIPS - count, " boats left to hit!")
+        if count == NUM_SHIPS:
+            print("You've won!")
+        else:
+            assessWin(board,count)
+    else: assessWin(board,count)
 
 def main():
     board = gen_board() #generates a board
     print_board(board) #prints that board
-    '''
-    def shipsLeft():
-    count = NUM_SHIPS
-    for count in range(NUM_SHIPS, 0, -1):
-        if assessCoordinate(board) == True:
-            count -= 1 #count = count - 1
-    return count'''
+    assessWin(board,0) #assessWin includes assessCoordinate which includes enterCoordinates
 
-    while assessCoordinate(board) < NUM_SHIPS:
-        enterCoordinates()
-
-        assessCoordinate(board)
-
-    print("You've won!")
 
 main()
+#TO DO
+#if input not numbers eg. w,3
+#say how many ships remaining
+#make boats more than one square - after randint, next boat is one of the spaces around it

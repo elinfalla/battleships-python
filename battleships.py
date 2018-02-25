@@ -123,15 +123,14 @@ def assessCoordinate(board,count):
 def assessWin(board,count):
     if assessCoordinate(board,count) == True:
         count += 1
-            if NUM_SHIPS - count == 1:
-                print("1 boat left to hit!")
-            else:
-                print(NUM_SHIPS - count, " boats left to hit!")
+        if NUM_SHIPS - count == 1:
+            print("1 boat left to hit!")
+        else:
+            print(NUM_SHIPS - count, " boats left to hit!")
         if count == NUM_SHIPS:
             print("You've won!")
-        else:
-            assessWin(board,count)
-    else: assessWin(board,count)
+            return #ends the function - means won't assessWin again aka game has ended
+    assessWin(board,count)
 
 def main():
     board = gen_board() #generates a board
